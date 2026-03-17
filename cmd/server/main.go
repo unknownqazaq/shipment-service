@@ -34,7 +34,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	log.Println("🚀 Shipment gRPC server running on :50051")
+	log.Println("Shipment gRPC server running on :50051")
 
 	// 7. Запускаем
 	if err := grpcServer.Serve(lis); err != nil {
