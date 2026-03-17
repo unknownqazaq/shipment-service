@@ -16,7 +16,7 @@ type ShipmentHandler struct {
 	service application.Service
 }
 
-func NewShipmentHandler(service *application.ShipmentService) *ShipmentHandler {
+func NewShipmentHandler(service application.Service) *ShipmentHandler {
 	return &ShipmentHandler{service: service}
 }
 
