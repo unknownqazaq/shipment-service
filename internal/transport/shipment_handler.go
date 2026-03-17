@@ -5,6 +5,7 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/unknownqazaq/shipment-service/gen"
 	"github.com/unknownqazaq/shipment-service/internal/application"
@@ -58,7 +59,7 @@ func (h *ShipmentHandler) AddStatusEvent(ctx context.Context, req *gen.AddStatus
 		ShipmentId: event.ShipmentID,
 		Status:     req.Status,
 		Comment:    event.Comment,
-		CreatedAt:  event.CreatedAt.String(),
+		CreatedAt:  timestamppb.New(event.CreatedAt),
 	}, nil
 }
 
@@ -75,7 +76,7 @@ func (h *ShipmentHandler) GetShipmentHistory(ctx context.Context, req *gen.GetSh
 			ShipmentId: e.ShipmentID,
 			Status:     domainStatusToProto(e.Status),
 			Comment:    e.Comment,
-			CreatedAt:  e.CreatedAt.String(),
+			CreatedAt:  timestamppb.New(e.CreatedAt),
 		})
 	}
 
@@ -95,7 +96,7 @@ func domainToProto(s *domain.Shipment) *gen.Shipment {
 		UnitNumber:      s.UnitNumber,
 		Amount:          s.Amount,
 		DriverRevenue:   s.DriverRevenue,
-		CreatedAt:       s.CreatedAt.String(),
+		CreatedAt:       timestamppb.New(s.CreatedAt),
 	}
 }
 

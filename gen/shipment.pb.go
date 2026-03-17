@@ -9,6 +9,7 @@ package gen
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,7 +22,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Статусы отправления
 type ShipmentStatus int32
 
 const (
@@ -89,7 +89,7 @@ type Shipment struct {
 	UnitNumber      string                 `protobuf:"bytes,7,opt,name=unit_number,json=unitNumber,proto3" json:"unit_number,omitempty"`
 	Amount          float64                `protobuf:"fixed64,8,opt,name=amount,proto3" json:"amount,omitempty"`
 	DriverRevenue   float64                `protobuf:"fixed64,9,opt,name=driver_revenue,json=driverRevenue,proto3" json:"driver_revenue,omitempty"`
-	CreatedAt       string                 `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt       *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -187,11 +187,11 @@ func (x *Shipment) GetDriverRevenue() float64 {
 	return 0
 }
 
-func (x *Shipment) GetCreatedAt() string {
+func (x *Shipment) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return ""
+	return nil
 }
 
 // Событие смены статуса
@@ -201,7 +201,7 @@ type StatusEvent struct {
 	ShipmentId    string                 `protobuf:"bytes,2,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
 	Status        ShipmentStatus         `protobuf:"varint,3,opt,name=status,proto3,enum=shipment.ShipmentStatus" json:"status,omitempty"`
 	Comment       string                 `protobuf:"bytes,4,opt,name=comment,proto3" json:"comment,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -264,11 +264,11 @@ func (x *StatusEvent) GetComment() string {
 	return ""
 }
 
-func (x *StatusEvent) GetCreatedAt() string {
+func (x *StatusEvent) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return ""
+	return nil
 }
 
 type CreateShipmentRequest struct {
@@ -559,7 +559,7 @@ var File_shipment_proto protoreflect.FileDescriptor
 
 const file_shipment_proto_rawDesc = "" +
 	"\n" +
-	"\x0eshipment.proto\x12\bshipment\"\xd1\x02\n" +
+	"\x0eshipment.proto\x12\bshipment\x1a\x1fgoogle/protobuf/timestamp.proto\"\xed\x02\n" +
 	"\bShipment\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12)\n" +
 	"\x10reference_number\x18\x02 \x01(\tR\x0freferenceNumber\x12\x16\n" +
@@ -571,18 +571,18 @@ const file_shipment_proto_rawDesc = "" +
 	"\vunit_number\x18\a \x01(\tR\n" +
 	"unitNumber\x12\x16\n" +
 	"\x06amount\x18\b \x01(\x01R\x06amount\x12%\n" +
-	"\x0edriver_revenue\x18\t \x01(\x01R\rdriverRevenue\x12\x1d\n" +
+	"\x0edriver_revenue\x18\t \x01(\x01R\rdriverRevenue\x129\n" +
 	"\n" +
 	"created_at\x18\n" +
-	" \x01(\tR\tcreatedAt\"\xa9\x01\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xc5\x01\n" +
 	"\vStatusEvent\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vshipment_id\x18\x02 \x01(\tR\n" +
 	"shipmentId\x120\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x18.shipment.ShipmentStatusR\x06status\x12\x18\n" +
-	"\acomment\x18\x04 \x01(\tR\acomment\x12\x1d\n" +
+	"\acomment\x18\x04 \x01(\tR\acomment\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\tR\tcreatedAt\"\xfd\x01\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfd\x01\n" +
 	"\x15CreateShipmentRequest\x12)\n" +
 	"\x10reference_number\x18\x01 \x01(\tR\x0freferenceNumber\x12\x16\n" +
 	"\x06origin\x18\x02 \x01(\tR\x06origin\x12 \n" +
@@ -641,25 +641,28 @@ var file_shipment_proto_goTypes = []any{
 	(*AddStatusEventRequest)(nil),      // 5: shipment.AddStatusEventRequest
 	(*GetShipmentHistoryRequest)(nil),  // 6: shipment.GetShipmentHistoryRequest
 	(*GetShipmentHistoryResponse)(nil), // 7: shipment.GetShipmentHistoryResponse
+	(*timestamppb.Timestamp)(nil),      // 8: google.protobuf.Timestamp
 }
 var file_shipment_proto_depIdxs = []int32{
-	0, // 0: shipment.Shipment.status:type_name -> shipment.ShipmentStatus
-	0, // 1: shipment.StatusEvent.status:type_name -> shipment.ShipmentStatus
-	0, // 2: shipment.AddStatusEventRequest.status:type_name -> shipment.ShipmentStatus
-	2, // 3: shipment.GetShipmentHistoryResponse.events:type_name -> shipment.StatusEvent
-	3, // 4: shipment.ShipmentService.CreateShipment:input_type -> shipment.CreateShipmentRequest
-	4, // 5: shipment.ShipmentService.GetShipment:input_type -> shipment.GetShipmentRequest
-	5, // 6: shipment.ShipmentService.AddStatusEvent:input_type -> shipment.AddStatusEventRequest
-	6, // 7: shipment.ShipmentService.GetShipmentHistory:input_type -> shipment.GetShipmentHistoryRequest
-	1, // 8: shipment.ShipmentService.CreateShipment:output_type -> shipment.Shipment
-	1, // 9: shipment.ShipmentService.GetShipment:output_type -> shipment.Shipment
-	2, // 10: shipment.ShipmentService.AddStatusEvent:output_type -> shipment.StatusEvent
-	7, // 11: shipment.ShipmentService.GetShipmentHistory:output_type -> shipment.GetShipmentHistoryResponse
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0,  // 0: shipment.Shipment.status:type_name -> shipment.ShipmentStatus
+	8,  // 1: shipment.Shipment.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 2: shipment.StatusEvent.status:type_name -> shipment.ShipmentStatus
+	8,  // 3: shipment.StatusEvent.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 4: shipment.AddStatusEventRequest.status:type_name -> shipment.ShipmentStatus
+	2,  // 5: shipment.GetShipmentHistoryResponse.events:type_name -> shipment.StatusEvent
+	3,  // 6: shipment.ShipmentService.CreateShipment:input_type -> shipment.CreateShipmentRequest
+	4,  // 7: shipment.ShipmentService.GetShipment:input_type -> shipment.GetShipmentRequest
+	5,  // 8: shipment.ShipmentService.AddStatusEvent:input_type -> shipment.AddStatusEventRequest
+	6,  // 9: shipment.ShipmentService.GetShipmentHistory:input_type -> shipment.GetShipmentHistoryRequest
+	1,  // 10: shipment.ShipmentService.CreateShipment:output_type -> shipment.Shipment
+	1,  // 11: shipment.ShipmentService.GetShipment:output_type -> shipment.Shipment
+	2,  // 12: shipment.ShipmentService.AddStatusEvent:output_type -> shipment.StatusEvent
+	7,  // 13: shipment.ShipmentService.GetShipmentHistory:output_type -> shipment.GetShipmentHistoryResponse
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_shipment_proto_init() }

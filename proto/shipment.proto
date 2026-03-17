@@ -3,7 +3,8 @@ syntax = "proto3";
 package shipment;
 option go_package = "github.com/unknownqazaq/shipment-service/gen;gen";
 
-// Статусы отправления
+import "google/protobuf/timestamp.proto";
+
 enum ShipmentStatus {
   PENDING = 0;
   PICKED_UP = 1;
@@ -23,7 +24,7 @@ message Shipment {
   string unit_number = 7;
   double amount = 8;
   double driver_revenue = 9;
-  string created_at = 10;
+  google.protobuf.Timestamp created_at = 10;
 }
 
 // Событие смены статуса
@@ -32,7 +33,7 @@ message StatusEvent {
   string shipment_id = 2;
   ShipmentStatus status = 3;
   string comment = 4;
-  string created_at = 5;
+  google.protobuf.Timestamp created_at = 5;
 }
 
 //Запросы и ответы
