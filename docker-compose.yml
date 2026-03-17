@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  shipment-service:
+    build: .
+    ports:
+      - "50051:50051"
