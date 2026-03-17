@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package shipment;
+option go_package = "github.com/unknownqazaq/shipment-service/gen;gen";
+
+// Статусы отправления
+enum ShipmentStatus {
+  PENDING = 0;
+  PICKED_UP = 1;
+  IN_TRANSIT = 2;
+  DELIVERED = 3;
+  CANCELLED = 4;
+}
+
+// Основная модель
+message Shipment {
+  string id = 1;
+  string reference_number = 2;
+  string origin = 3;
+  string destination = 4;
+  ShipmentStatus status = 5;
+  string driver_name = 6;
+  string unit_number = 7;
+  double amount = 8;
+  double driver_revenue = 9;
+  string created_at = 10;
+}
+
+// Событие смены статуса
+message StatusEvent {
+  string id = 1;
+  string shipment_id = 2;
+  ShipmentStatus status = 3;
+  string comment = 4;
+  string created_at = 5;
+}
+
+//Запросы и ответы
+
+message CreateShipmentRequest {
+  string reference_number = 1;
+  string origin = 2;
+  string destination = 3;
+  string driver_name = 4;
+  string unit_number = 5;
+  double amount = 6;
+  double driver_revenue = 7;
+}
+
+message GetShipmentRequest {
+  string id = 1;
+}
+
+message AddStatusEventRequest {
+  string shipment_id = 1;
+  ShipmentStatus status = 2;
+  string comment = 3;
+}
+
+message GetShipmentHistoryRequest {
+  string shipment_id = 1;
+}
+
+message GetShipmentHistoryResponse {
+  repeated StatusEvent events = 1;
+}
+
+//Сервис
+
+service ShipmentService {
+  rpc CreateShipment(CreateShipmentRequest) returns (Shipment);
+  rpc GetShipment(GetShipmentRequest) returns (Shipment);
+  rpc AddStatusEvent(AddStatusEventRequest) returns (StatusEvent);
+  rpc GetShipmentHistory(GetShipmentHistoryRequest) returns (GetShipmentHistoryResponse);
+}
