@@ -13,7 +13,7 @@ import (
 
 type ShipmentHandler struct {
 	gen.UnimplementedShipmentServiceServer
-	service *application.ShipmentService
+	service application.Service
 }
 
 func NewShipmentHandler(service *application.ShipmentService) *ShipmentHandler {
